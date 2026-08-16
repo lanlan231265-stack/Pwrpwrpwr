@@ -87,12 +87,13 @@
   /* ---- Pure CSS category filter (no JavaScript needed — works everywhere) ---- */
   .cat-radio{position:absolute;opacity:0;pointer-events:none;}
   .cat-chips{
-    display:flex;flex-wrap:wrap;gap:8px;
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:8px;
     margin-top:6px;
   }
   .cat-chip{
-    flex:0 0 auto;
-    padding:8px 14px;
+    padding:8px 10px;
     border-radius:999px;
     font-size:12.5px;
     font-weight:600;
@@ -101,6 +102,13 @@
     color:var(--navy-2);
     cursor:pointer;
     user-select:none;
+    text-align:center;
+  }
+  .cat-chip-all{
+    background:var(--navy);
+    border-color:var(--navy);
+    color:#fff;
+    font-weight:800;
   }
   .section-block{display:none;}
   #cat-all:checked ~ .wrap .section-block{display:block;}
@@ -117,7 +125,6 @@
   #cat11:checked ~ .wrap .section-block.cat11,
   #cat12:checked ~ .wrap .section-block.cat12,
   #cat13:checked ~ .wrap .section-block.cat13{display:block;}
-  #cat-all:checked ~ .wrap .toc-wrap label[for="cat-all"],
   #cat1:checked ~ .wrap .toc-wrap label[for="cat1"],
   #cat2:checked ~ .wrap .toc-wrap label[for="cat2"],
   #cat3:checked ~ .wrap .toc-wrap label[for="cat3"],
@@ -132,6 +139,9 @@
   #cat12:checked ~ .wrap .toc-wrap label[for="cat12"],
   #cat13:checked ~ .wrap .toc-wrap label[for="cat13"]{
     background:var(--mint);border-color:var(--mint);color:#0F2C28;
+  }
+  #cat-all:checked ~ .wrap .toc-wrap label[for="cat-all"]{
+    box-shadow:0 0 0 3px var(--mint);
   }
 
   /* Capacity reference tables */
@@ -156,6 +166,14 @@
   .calc-title{font-size:16px;font-weight:800;color:var(--navy);display:flex;align-items:center;gap:8px;margin-bottom:4px;}
   .calc-title .tag{font-size:11px;font-weight:700;background:var(--mint);color:#0F2C28;padding:2px 8px;border-radius:6px;letter-spacing:.04em;}
   .calc-desc{font-size:13px;color:var(--ink-soft);margin-bottom:16px;}
+  .calc-desc-standalone{
+    font-size:13px;color:var(--ink-soft);
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px 16px;
+    margin-bottom:10px;
+  }
   .subblock{margin-top:18px;}
   .subblock h3{font-size:13.5px;color:var(--navy-2);margin:0 0 8px;font-weight:800;}
   table.combo-table{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:12.8px;}
@@ -253,15 +271,13 @@
 
 <div class="topbar">
   <div class="topbar-inner">
-    <div class="eyebrow">居家托育督導工具</div>
     <h1>臺北市居家托育規定QA</h1>
     <div class="subtitle">收托人數・訪視頻率・裁罰標準・準公共作業・補助津貼・安全與品質檢核，一次查清楚</div>
     <div class="tip-box">
       本頁全部內容<b>已直接展開顯示</b>，不需要點擊即可往下捲動閱讀完整內容。<br>
-      下方分類按鈕可直接篩選章節；文字搜尋框可快速篩選問題（<b>開始打字會自動切回「全部」分類</b>，避免兩者互相影響）。<br>
-      <b>請務必用 Safari 或 Chrome 瀏覽器開啟本檔案</b>（長按檔案→分享→拷貝到Chrome），若用「檔案」App內建預覽開啟，搜尋與分類按鈕將無法使用。
+      下方分類按鈕可直接篩選章節；文字搜尋框可快速篩選問題。
     </div>
-    <input type="text" id="search" placeholder="輸入關鍵字快速查詢，例如：罰鍰、記分、環境檢核、獎助金…">
+    <input type="text" id="search" placeholder="輸入關鍵字快速查詢，例如：罰鍰、記點、環境檢核、獎助金…">
     <div class="result-count" id="resultCount"></div>
   </div>
 </div>
@@ -269,34 +285,71 @@
 <div class="wrap">
 
   <div class="toc-card toc-wrap">
-    <div class="toc-title">分類篩選（點一下即可切換，此按鈕不需要JavaScript）</div>
+    <div class="toc-title">分類篩選</div>
     <div class="cat-chips">
-      <label class="cat-chip" for="cat-all">全部</label>
+      <label class="cat-chip cat-chip-all" for="cat-all">全部</label>
       <label class="cat-chip" for="cat1">資格與消極限制</label>
-<label class="cat-chip" for="cat2">收托型態、人數與執業義務</label>
+<label class="cat-chip" for="cat2">收托型態、人數與執業規定</label>
 <label class="cat-chip" for="cat3">訪視輔導頻率</label>
-<label class="cat-chip" for="cat4">中央裁罰標準</label>
+<label class="cat-chip" for="cat4">裁罰標準</label>
 <label class="cat-chip" for="cat5">準公共托育作業</label>
-<label class="cat-chip" for="cat6">家長托育補助與津貼（含臺北市）</label>
+<label class="cat-chip" for="cat6">家長托育補助與津貼</label>
 <label class="cat-chip" for="cat7">臺北市收費基準</label>
-<label class="cat-chip" for="cat8">臺北市違規處理流程</label>
-<label class="cat-chip" for="cat9">臺北市記分管理機制</label>
-<label class="cat-chip" for="cat10">環境安全檢核（40項）</label>
-<label class="cat-chip" for="cat11">照顧品質評估（35項）</label>
+<label class="cat-chip" for="cat8">違規處理流程</label>
+<label class="cat-chip" for="cat9">臺北市記點管理</label>
+<label class="cat-chip" for="cat10">環境安全檢核</label>
+<label class="cat-chip" for="cat11">照顧品質評估</label>
 <label class="cat-chip" for="cat12">特殊需求兒童補助</label>
 <label class="cat-chip" for="cat13">臨時托育補助</label>
 
     </div>
   </div>
 
+  
+
+
+  <div class="section-block cat1">
+<div class="section-head" id="anchor-cat1"><span class="num">一</span><h2>資格與消極限制</h2></div>
+<div class="card" data-tags="擔任居家托育人員（保母）須具備什麼資格？ 資格 登記 技術士證">
+      <div class="qline"><span class="qmark">Q</span><span class="qtext">擔任居家托育人員（保母）須具備什麼資格？</span></div>
+      <div class="answer"><p>應為成年人，並具備下列資格之一，向地方主管機關辦理登記後始得執業：</p>
+   <ul>
+     <li>取得保母人員或托育人員技術士證</li>
+     <li>高級中等以上學校幼兒保育、家政、護理相關學程/科/系/所畢業</li>
+     <li>修畢托育人員專業訓練課程並領有結業證書</li>
+   </ul>
+   <span class="lawtag">依據：兒少權法第26條</span></div>
+    </div>
+<div class="card" data-tags="哪些情形不得擔任保母？已登記者會怎樣處理？ 消極資格 廢止登記 前科">
+      <div class="qline"><span class="qmark">Q</span><span class="qtext">哪些情形不得擔任保母？已登記者會怎樣處理？</span></div>
+      <div class="answer"><p>有下列情形之一者不得擔任保母；已登記者應廢止登記、命停止服務並強制轉介收托兒童：</p>
+   <ul>
+     <li>曾犯性侵害、性騷擾（性騷擾防治法第25條）、兒少性交易或兒少性剝削防制條例之罪，經緩起訴或有罪判決確定（未滿18歲犯刑法第227條者除外）</li>
+     <li>曾犯毒品危害防制條例之罪，經緩起訴或有罪判決確定</li>
+     <li>有兒少權法第49條各款行為（兒虐、身心虐待、遺棄等），經查證屬實</li>
+     <li>行為違法或不當，情節影響收托兒童權益重大，經查證屬實</li>
+     <li>有客觀事實認有傷害兒童之虞，經主管機關專家小組認定不能執行業務（原因消失後可再申請）</li>
+     <li>受監護或輔助宣告尚未撤銷</li>
+     <li>曾犯家庭暴力罪，經緩起訴或有罪判決確定日起5年內</li>
+   </ul>
+   <span class="lawtag">依據：兒少權法第26條之1</span></div>
+    </div>
+<div class="card" data-tags="保母同住家人若有前科或不當行為，還能在宅收托嗎？ 同住成員 到宅托育">
+      <div class="qline"><span class="qmark">Q</span><span class="qtext">保母同住家人若有前科或不當行為，還能在宅收托嗎？</span></div>
+      <div class="answer"><p>不行。與保母共同居住之人若有性犯罪、毒品犯罪、重大不當行為，或經認定有傷童之虞者，該保母僅能提供「到宅托育」，不得在宅收托。</p>
+   <span class="lawtag">依據：兒少權法第26條之2</span></div>
+    </div>
+</div>
+<div class="section-block cat2">
+<div class="section-head" id="anchor-cat2"><span class="num">二</span><h2>收托型態、人數與執業規定</h2></div>
   <!-- ============ 收托人數組合對照表（可收合，不會擋住下方分類篩選內容） ============ -->
+  <div class="calc-desc-standalone">人數計算範疇：含托育人員未滿3歲之子女與受監護者、未滿5歲之三親等內兒童、未滿12歲以下（非三親等）兒童無論是否收費均需列計。</div>
   <details class="calc-card">
     <summary class="calc-toggle">
       <span class="calc-title" style="margin-bottom:0;"><span class="tag">對照表</span>收托人數組合快速查詢（點此展開／收合）</span>
       <span class="arrow">▾</span>
     </summary>
     <div class="calc-body">
-    <div class="calc-desc">人數計算範疇：含托育人員未滿3歲之子女與受監護者、未滿5歲之三親等內兒童、未滿12歲之未收費兒童。</div>
 
     <div class="subblock">
       <h3>一、單一托育人員</h3>
@@ -386,40 +439,6 @@
     </div>
   </details>
 
-  <div class="section-block cat1">
-<div class="section-head" id="anchor-cat1"><span class="num">一</span><h2>資格與消極限制</h2></div>
-<div class="card" data-tags="擔任居家托育人員（保母）須具備什麼資格？ 資格 登記 技術士證">
-      <div class="qline"><span class="qmark">Q</span><span class="qtext">擔任居家托育人員（保母）須具備什麼資格？</span></div>
-      <div class="answer"><p>應為成年人，並具備下列資格之一，向地方主管機關辦理登記後始得執業：</p>
-   <ul>
-     <li>取得保母人員或托育人員技術士證</li>
-     <li>高級中等以上學校幼兒保育、家政、護理相關學程/科/系/所畢業</li>
-     <li>修畢托育人員專業訓練課程並領有結業證書</li>
-   </ul>
-   <span class="lawtag">依據：兒少權法第26條</span></div>
-    </div>
-<div class="card" data-tags="哪些情形不得擔任保母？已登記者會怎樣處理？ 消極資格 廢止登記 前科">
-      <div class="qline"><span class="qmark">Q</span><span class="qtext">哪些情形不得擔任保母？已登記者會怎樣處理？</span></div>
-      <div class="answer"><p>有下列情形之一者不得擔任保母；已登記者應廢止登記、命停止服務並強制轉介收托兒童：</p>
-   <ul>
-     <li>曾犯性侵害、性騷擾（性騷擾防治法第25條）、兒少性交易或兒少性剝削防制條例之罪，經緩起訴或有罪判決確定（未滿18歲犯刑法第227條者除外）</li>
-     <li>曾犯毒品危害防制條例之罪，經緩起訴或有罪判決確定</li>
-     <li>有兒少權法第49條各款行為（兒虐、身心虐待、遺棄等），經查證屬實</li>
-     <li>行為違法或不當，情節影響收托兒童權益重大，經查證屬實</li>
-     <li>有客觀事實認有傷害兒童之虞，經主管機關專家小組認定不能執行業務（原因消失後可再申請）</li>
-     <li>受監護或輔助宣告尚未撤銷</li>
-     <li>曾犯家庭暴力罪，經緩起訴或有罪判決確定日起5年內</li>
-   </ul>
-   <span class="lawtag">依據：兒少權法第26條之1</span></div>
-    </div>
-<div class="card" data-tags="保母同住家人若有前科或不當行為，還能在宅收托嗎？ 同住成員 到宅托育">
-      <div class="qline"><span class="qmark">Q</span><span class="qtext">保母同住家人若有前科或不當行為，還能在宅收托嗎？</span></div>
-      <div class="answer"><p>不行。與保母共同居住之人若有性犯罪、毒品犯罪、重大不當行為，或經認定有傷童之虞者，該保母僅能提供「到宅托育」，不得在宅收托。</p>
-   <span class="lawtag">依據：兒少權法第26條之2</span></div>
-    </div>
-</div>
-<div class="section-block cat2">
-<div class="section-head" id="anchor-cat2"><span class="num">二</span><h2>收托型態、人數與執業義務</h2></div>
 <div class="card" data-tags="半日、日間、全日、夜間托育怎麼區分？ 托育型態 時間定義">
       <div class="qline"><span class="qmark">Q</span><span class="qtext">半日、日間、全日、夜間托育怎麼區分？</span></div>
       <div class="answer"><table><tr><th>型態</th><th>時間定義</th></tr>
@@ -443,11 +462,11 @@
     </div>
 <div class="card" data-tags="收托人數計算範疇包含哪些孩子？ 人數計算 三親等 免收費">
       <div class="qline"><span class="qmark">Q</span><span class="qtext">收托人數計算範疇包含哪些孩子？</span></div>
-      <div class="answer"><p>計算範疇包含：保母未滿3歲之子女與受其監護者、未滿5歲之三親等內兒童、未滿12歲之未收費兒童。</p></div>
+      <div class="answer"><p>計算範疇包含：保母未滿3歲之子女與受其監護者、未滿5歲之三親等內兒童、未滿12歲以下（非三親等）兒童無論是否收費均需列計。</p></div>
     </div>
 <div class="card" data-tags="保母每年應完成多少在職訓練？CPR呢？ 在職訓練 CPR 時數">
       <div class="qline"><span class="qmark">Q</span><span class="qtext">保母每年應完成多少在職訓練？CPR呢？</span></div>
-      <div class="answer"><p>採曆年制計算，每年至少18小時；每2年所接受之在職訓練，應包括8小時以上之基本救命術（CPR）。</p>
+      <div class="answer"><p>115年起改採曆年制計算，每年至少18小時；每2年所接受之在職訓練，應包括8小時以上之基本救命術（CPR）。</p>
    <span class="lawtag">依據：登記及管理辦法第4條</span></div>
     </div>
 <div class="card" data-tags="保母健康檢查多久要做一次？ 健康檢查">
@@ -456,7 +475,7 @@
     </div>
 <div class="card" data-tags="登記證書效期多久？期滿前多久要換發？ 登記證書 效期 換發">
       <div class="qline"><span class="qmark">Q</span><span class="qtext">登記證書效期多久？期滿前多久要換發？</span></div>
-      <div class="answer"><p>登記證書效期為6年，應於屆滿前3個月內申請換發；在宅托育者應將證書懸掛於明顯處，證書不得租借或轉讓他人。</p></div>
+      <div class="answer"><p>登記證書效期為6年，應於屆滿前3個月內申請換發；在宅托育者應將證書懸掛於明顯處，證書不得租借或轉讓他人。若<b>未辦理屆期換發，將會被主管機關廢止登記證</b>。</p></div>
     </div>
 <div class="card" data-tags="開始或結束收托兒童，幾天內要通報？ 收托通報 7日">
       <div class="qline"><span class="qmark">Q</span><span class="qtext">開始或結束收托兒童，幾天內要通報？</span></div>
@@ -519,14 +538,14 @@
     </div>
 </div>
 <div class="section-block cat4">
-<div class="section-head" id="anchor-cat4"><span class="num">四</span><h2>中央裁罰標準</h2></div>
+<div class="section-head" id="anchor-cat4"><span class="num">四</span><h2>裁罰標準</h2></div>
 <div class="card" data-tags="未辦理登記就收托（非法保母），會怎麼罰？ 非法保母 未登記 罰鍰">
       <div class="qline"><span class="qmark">Q</span><span class="qtext">未辦理登記就收托（非法保母），會怎麼罰？</span></div>
       <div class="answer"><p>處<span class="fine">新臺幣6,000元以上30,000元以下</span>罰鍰，並命限期改善；屆期未改，再處6,000-30,000元罰鍰，並命1個月內轉介兒童。</p>
    <span class="lawtag">依據：兒少權法第90條第1項</span></div>
     </div>
-<div class="card" data-tags="限期改善期間又違規增加收托，怎麼處理？ 限期改善 按次處罰">
-      <div class="qline"><span class="qmark">Q</span><span class="qtext">限期改善期間又違規增加收托，怎麼處理？</span></div>
+<div class="card" data-tags="未登記者限期改善期間又違規增加收托，怎麼處理？ 限期改善 按次處罰 未登記">
+      <div class="qline"><span class="qmark">Q</span><span class="qtext">未登記者限期改善期間又違規增加收托，怎麼處理？</span></div>
       <div class="answer"><p>處<span class="fine">6,000-30,000元</span>罰鍰，得按次處罰，並強制轉介收托兒童。</p>
    <span class="lawtag">依據：兒少權法第90條第4項</span></div>
     </div>
@@ -550,14 +569,9 @@
    </ul>
    <span class="lawtag">依據：兒少權法第90條第5項、登記及管理辦法第18條之1</span></div>
     </div>
-<div class="card" data-tags="違反停托命令仍繼續收托，罰則？ 違反停托 重罰">
-      <div class="qline"><span class="qmark">Q</span><span class="qtext">違反停托命令仍繼續收托，罰則？</span></div>
-      <div class="answer"><p>處<span class="fine">新臺幣60,000元以上300,000元以下</span>罰鍰，並得公布姓名。</p>
-   <span class="lawtag">依據：兒少權法第90條第7項</span></div>
-    </div>
-<div class="card" data-tags="兒虐、身心虐待、遺棄等重大違法，罰多少？ 兒虐 重罰 公布姓名">
+<div class="card" data-tags="兒虐、身心虐待、遺棄等重大違法，罰多少？ 兒虐 重罰 公布姓名 準公共退出">
       <div class="qline"><span class="qmark">Q</span><span class="qtext">兒虐、身心虐待、遺棄等重大違法，罰多少？</span></div>
-      <div class="answer"><p>處<span class="fine">新臺幣60,000元以上600,000元以下</span>罰鍰，並得公布姓名或名稱，建立裁罰資料供查詢。</p>
+      <div class="answer"><p>處<span class="fine">新臺幣60,000元以上600,000元以下</span>罰鍰，並得公布姓名或名稱，建立裁罰資料供查詢。如為準公共保母，將被<b>退出準公共合作</b>。</p>
    <span class="lawtag">依據：兒少權法第49條、第97條</span></div>
     </div>
 <div class="card" data-tags="獨留兒童或交由不適當之人照顧，如何處罰？ 獨留 不適當之人">
@@ -607,7 +621,7 @@
      <li>違反第3條、第4條、第14條、第16條，且經命限期改善達3次或科處罰鍰</li>
      <li>其他可歸責於合作對象之事項</li>
    </ul>
-   <p>終止後主管機關應協助轉介，轉介期間可支付服務費最長<b>6個月</b>；因違規終止者，<b>2年內不得再申請簽約</b>。</p>
+   <p>終止後主管機關應協助轉介，轉介期間可繼續補助家長最長<b>6個月</b>；因違規終止者，<b>2年內不得再申請簽約</b>。</p>
    <span class="lawtag">依據：作業要點第8點</span></div>
     </div>
 <div class="card" data-tags="準公共提升托育服務品質獎助金，金額與申請時間？ 獎助金 18000 10月">
@@ -626,12 +640,12 @@
      <li><b>重新加入限制</b>：因上述違規事由終止契約者，自終止之日起<b>2年內不得再提出簽約申請</b>（一般自願退出者則為1年內不得申請，情形不同）。</li>
      <li><b>提升托育服務品質獎助金追繳</b>：申請資料不實或造假者追繳全額，且次年度起2年內不得再申請獎助。</li>
    </ul>
-   <p>此外，臺北市另訂有「記分管理機制」（見本手冊第九類），累計記分達3分以上者會被暫停媒合3個月至1年，且不補助隔年責任保險及準公共意外保險，與上述準公共契約層級的處罰是分開計算、可能同時發生的。</p>
+   <p>此外，臺北市另訂有「記點管理機制」（見本手冊第九類），累計記點達3點以上者會被暫停媒合3個月至1年，且不補助隔年責任保險及準公共意外保險，與上述準公共契約層級的處罰是分開計算、可能同時發生的。</p>
    <span class="lawtag">依據：作業要點第3、7、8、26點</span></div>
     </div>
 </div>
 <div class="section-block cat6">
-<div class="section-head" id="anchor-cat6"><span class="num">六</span><h2>家長托育補助與津貼（含臺北市）</h2></div>
+<div class="section-head" id="anchor-cat6"><span class="num">六</span><h2>家長托育補助與津貼</h2></div>
 <div class="card" data-tags="家長申報托育補助有哪些資格要件？ 托育補助 申報資格">
       <div class="qline"><span class="qmark">Q</span><span class="qtext">家長申報托育補助有哪些資格要件？</span></div>
       <div class="answer"><ul>
@@ -678,8 +692,8 @@
    <tr><td>第三胎</td><td>7,000元</td><td>8,000元</td><td>10,000元</td></tr></table>
    <p>臺北市友善托育補助第二胎以上最高10,000元；中央加臺北市總額不超過實際收費。</p></div>
     </div>
-<div class="card" data-tags="（臺北市）送托非準公共保母，補助多少？ 臺北市 非準公共 協力照顧補助">
-      <div class="qline"><span class="qmark">Q</span><span class="qtext">（臺北市）送托非準公共保母，補助多少？</span></div>
+<div class="card" data-tags="（臺北市）送托非準公共保母及親屬保母，補助多少？ 臺北市 非準公共 親屬保母 協力照顧補助">
+      <div class="qline"><span class="qmark">Q</span><span class="qtext">（臺北市）送托非準公共保母及親屬保母，補助多少？</span></div>
       <div class="answer"><p>113年9月1日起標準（0-3歲）：</p>
    <table><tr><th>保母類型</th><th>育兒津貼（第一/二/三胎）</th><th>臺北市協力照顧補助</th><th>家長領取合計（第一/二/三胎）</th></tr>
    <tr><td>結訓或學歷保母</td><td>5,000/6,000/7,000元</td><td>各胎次2,000元</td><td>7,000/8,000/9,000元</td></tr>
@@ -702,7 +716,7 @@
      <li>延長托育費</li>
      <li>節慶獎金禮品：
        <ul>
-         <li>年終獎金：最高1個月托育費（<b>攤提12個月加總不得超過1個月托育費</b>）</li>
+         <li>年終獎金：最高1個月托育費（<b>可攤提，但攤提12個月加總不得超過1個月托育費</b>）</li>
          <li>端午節禮金：上限2,000元（<b>一次性收取，不得按月攤提</b>）</li>
          <li>中秋節禮金：上限2,000元（<b>一次性收取，不得按月攤提</b>）</li>
        </ul>
@@ -730,7 +744,7 @@
     </div>
 </div>
 <div class="section-block cat8">
-<div class="section-head" id="anchor-cat8"><span class="num">八</span><h2>臺北市違規處理流程</h2></div>
+<div class="section-head" id="anchor-cat8"><span class="num">八</span><h2>違規處理流程</h2></div>
 <div class="card" data-tags="（臺北市）未辦理登記提供居家托育，處理流程是什麼？ 未登記 臺北市 流程">
       <div class="qline"><span class="qmark">Q</span><span class="qtext">（臺北市）未辦理登記提供居家托育，處理流程是什麼？</span></div>
       <div class="answer"><p>依兒少權法第26條第1項：</p>
@@ -755,9 +769,9 @@
     </div>
 </div>
 <div class="section-block cat9">
-<div class="section-head" id="anchor-cat9"><span class="num">九</span><h2>臺北市記分管理機制</h2></div>
-<div class="card" data-tags="哪些違規記1分？ 記分 1分">
-      <div class="qline"><span class="qmark">Q</span><span class="qtext">哪些違規記1分？</span></div>
+<div class="section-head" id="anchor-cat9"><span class="num">九</span><h2>臺北市記點管理</h2></div>
+<div class="card" data-tags="哪些違規記1點？ 記點 1點">
+      <div class="qline"><span class="qmark">Q</span><span class="qtext">哪些違規記1點？</span></div>
       <div class="answer"><ul>
      <li>在職訓練類別或時數未符合規定（到期當月底仍未改善，併同月報陳報）</li>
      <li>事實發生30日內未辦理登記證書登載事項變更（輔導期7天）</li>
@@ -765,8 +779,8 @@
      <li>未辦理兒童發展篩檢（第1次輔導，第2次後陳報）</li>
    </ul></div>
     </div>
-<div class="card" data-tags="哪些違規記2分？ 記分 2分">
-      <div class="qline"><span class="qmark">Q</span><span class="qtext">哪些違規記2分？</span></div>
+<div class="card" data-tags="哪些違規記2點？ 記點 2點">
+      <div class="qline"><span class="qmark">Q</span><span class="qtext">哪些違規記2點？</span></div>
       <div class="answer"><ul>
      <li>不符合環境檢核（輔導期30天）</li>
      <li>符合收托限制但7日內未通報致人數不符，或收托方式/時間異動未通報（立即陳報）</li>
@@ -779,25 +793,25 @@
      <li>未專心托育（立即陳報）</li>
    </ul></div>
     </div>
-<div class="card" data-tags="哪些違規記3分？ 記分 3分 超收">
-      <div class="qline"><span class="qmark">Q</span><span class="qtext">哪些違規記3分？</span></div>
+<div class="card" data-tags="哪些違規記3點？ 記點 3點 超收">
+      <div class="qline"><span class="qmark">Q</span><span class="qtext">哪些違規記3點？</span></div>
       <div class="answer"><ul>
      <li>準公共托育服務者收費不符臺北市準公共價格上限規定（立即陳報）</li>
      <li>收托時間兼任或經營職務或事業（輔導期7天）</li>
      <li>收托人數、方式及年齡不符合法規規定，即超收（立即陳報）</li>
    </ul>
-   <p>重複違規以2倍記分；同一項次第2次違規即立即陳報社會局。一年內累積記分，次年重新累計。</p></div>
+   <p>重複違規以2倍記點；同一項次第2次違規即立即陳報社會局。一年內累積記點，次年重新累計。</p></div>
     </div>
-<div class="card" data-tags="累計記分達到多少分，會被暫停媒合？ 記分 暫停媒合">
-      <div class="qline"><span class="qmark">Q</span><span class="qtext">累計記分達到多少分，會被暫停媒合？</span></div>
-      <div class="answer"><table><tr><th>累計扣分</th><th>處分</th></tr>
-   <tr><td>3-5分</td><td>暫停媒合3個月，不補助下年度責任保險及準公共意外保險</td></tr>
-   <tr><td>6-10分</td><td>暫停媒合6個月，不補助下年度責任保險及準公共意外保險</td></tr>
-   <tr><td>11分以上</td><td>暫停媒合1年，不補助下年度場地責任保險及準公共意外保險</td></tr></table></div>
+<div class="card" data-tags="累計記點達到多少點，會被暫停媒合？ 記點 暫停媒合">
+      <div class="qline"><span class="qmark">Q</span><span class="qtext">累計記點達到多少點，會被暫停媒合？</span></div>
+      <div class="answer"><table><tr><th>累計扣點</th><th>處分</th></tr>
+   <tr><td>3-5點</td><td>暫停媒合3個月，不補助下年度責任保險及準公共意外保險</td></tr>
+   <tr><td>6-10點</td><td>暫停媒合6個月，不補助下年度責任保險及準公共意外保險</td></tr>
+   <tr><td>11點以上</td><td>暫停媒合1年，不補助下年度場地責任保險及準公共意外保險</td></tr></table></div>
     </div>
 </div>
 <div class="section-block cat10">
-<div class="section-head" id="anchor-cat10"><span class="num">十</span><h2>環境安全檢核（40項）</h2></div>
+<div class="section-head" id="anchor-cat10"><span class="num">十</span><h2>環境安全檢核</h2></div>
 <div class="card" data-tags="環境安全檢核共有幾項？分成哪些類別？ 環境安全 40項 分類">
       <div class="qline"><span class="qmark">Q</span><span class="qtext">環境安全檢核共有幾項？分成哪些類別？</span></div>
       <div class="answer"><p>共<b>40項</b>指標，分為：門(1-5)、陽台(6-8)、地板(9)、逃生出口(10-12)、窗戶(13-14)、室內樓梯(15-17)、傢具設施(18-21)、電器用品(22-24)、電線插座(25-26)、瓦斯熱水器(27-28)、消防設施(29-30)、物品收納(31-34)、收托兒睡床(35-37)、沐浴設備(38)、緊急狀況處理設備(39-40)。</p>
@@ -817,11 +831,11 @@
     </div>
 <div class="card" data-tags="急救箱應放置的位置與內容物有哪些規定？ 急救箱 緊急聯絡">
       <div class="qline"><span class="qmark">Q</span><span class="qtext">急救箱應放置的位置與內容物有哪些規定？</span></div>
-      <div class="answer"><p>應備有未過期急救用品之急救箱，放置於成人易取得、收托兒無法碰觸的地方；急救用品包括：體溫計、無菌紗布、無菌棉支、OK繃、繃帶、生理食鹽水、冰枕或冰寶等。緊急聯絡電話表及緊急逃生路線圖應置於固定明顯處。</p></div>
+      <div class="answer"><p>應備有未過期急救用品之急救箱，放置於成人易取得、收托兒無法碰觸的地方；急救用品包括：體溫計、無菌紗布、無菌棉支、OK繃、繃帶、生理食鹽水、冰枕或冰寶等（<b>至少七項</b>）。緊急聯絡電話表及緊急逃生路線圖應置於固定明顯處。</p></div>
     </div>
 </div>
 <div class="section-block cat11">
-<div class="section-head" id="anchor-cat11"><span class="num">十一</span><h2>照顧品質評估（35項）</h2></div>
+<div class="section-head" id="anchor-cat11"><span class="num">十一</span><h2>照顧品質評估</h2></div>
 <div class="card" data-tags="照顧品質評估指標共幾項？分幾大類？ 照顧品質 35項">
       <div class="qline"><span class="qmark">Q</span><span class="qtext">照顧品質評估指標共幾項？分幾大類？</span></div>
       <div class="answer"><p>共<b>35項</b>負向風險指標，分七大類：常規建立(1-5)、健康照顧與保健(6-15)、兒童活動與溝通技巧(16-18)、餐點預備(19-24)、環境安全(25-29)、兒童發展/情緒與行為困擾(30-31)、居家托育人員照顧互動知能(32-35)。若勾選「是」代表有照顧風險，應於訪視紀錄載明並予以輔導。</p></div>
